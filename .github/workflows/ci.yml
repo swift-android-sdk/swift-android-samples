@@ -24,6 +24,7 @@ jobs:
           skip android sdk install --version ${{ matrix.swift }}
           # https://github.com/swiftlang/swift-driver/pull/1879
           echo 'ANDROID_NDK_ROOT=""' >> $GITHUB_ENV
+          echo 'SWIFT_SDK_VERSION=${{ matrix.swift }}' >> $GITHUB_ENV
       - name: "Test Swift Package on Android (Skip)"
         uses: reactivecircus/android-emulator-runner@v2
         with:
