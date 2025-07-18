@@ -1,0 +1,33 @@
+name: swift-android-samples ci
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - '*'
+  schedule:
+    - cron:  '45 2,13 * * *'
+jobs:
+  run-samples:
+    strategy:
+      fail-fast: false
+      matrix:
+        swift: ['6.1', 'nightly-6.2']
+    runs-on: macos-13
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: "Build Swift Package for Android (Skip)"
+        run: |
+          brew install skiptools/skip/skip || (brew update && brew install skiptools/skip/skip)
+          skip android sdk install --version ${{ matrix.swift }}
+          # https://github.com/swiftlang/swift-driver/pull/1879
+          echo 'ANDROID_NDK_ROOT=""' >> $GITHUB_ENV
+      - name: "Test Swift Package on Android (Skip)"
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 28
+          arch: x86_64
+          script: runall.sh
+
