@@ -29,5 +29,5 @@ jobs:
         with:
           api-level: 28
           arch: x86_64
-          script: runall.sh
+          script: ./runall.sh
 
